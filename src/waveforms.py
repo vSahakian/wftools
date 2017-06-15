@@ -45,7 +45,7 @@ def download_response(network,station,location,channel,start,end,respfile):
 
 #############################################################################
 
-def remove_response(uncorrected_sac_file,resp_file,corrected_sac_file,water_level_bds):
+def remove_response(uncorrected_sac_file,resp_file,corrected_sac_file,water_level_bds,resp_unit):
     '''
     Remove the instrument response from a record, given a sac and resp file
     Input:
@@ -53,6 +53,7 @@ def remove_response(uncorrected_sac_file,resp_file,corrected_sac_file,water_leve
         resp_file:                      String with path to response file directory
         corrected_sac_file:             String with path to output corrected files directory
         water_level_bds:                Water level filter bounds (0min, ramp min, ramp max, 0max)
+        resp_unit:                      String with unit of resp: 'DISP', 'VEL', or 'ACC'
     '''
     
     from obspy import read
@@ -71,7 +72,7 @@ def remove_response(uncorrected_sac_file,resp_file,corrected_sac_file,water_leve
     ######
     ## Remove instrument response
     ## Make response:
-    seed_response = {'filename': resp_file, 'units': 'VEL'}
+    seed_response = {'filename': resp_file, 'units': resp_unit}
     
     # Make a copy of the data and save it to original, since the next steps
     #   will alter the data:

@@ -5,7 +5,7 @@
 
 import waveforms as wf
 
-######
+############################################################################
 
 # Set parameters for resp file:
 network = 'AZ'
@@ -13,19 +13,24 @@ station = 'BZN'
 location = '*'
 channel = 'BH*'
 
+# Unit for time series?
+tsunit = 'VEL'
+
 # Start and end date/time for resp file:
 starttime = '1998-01-01T00:00.000'
 endtime = '2599-12-31T23:59.000'
 
 # Pre-filter for instrument response correction:
-prefilt = (0.6,0.9,40,60)
+#   The last number should be the nyquist frequency; second to last reduces
+#   the filter towards the nyquist; first two are for the "water level"
+prefilt = (0.6,0.9,15,20)
 
 # sacfile (uncorrected) path, respfile path, instr. corrected sac file path:
 sacfile = '/Users/vsahakian/iris/play_data/cut_sac_files/11034469.AZ.BZN.BHE.sac'
 respfile = 'test.resp'
 icorr_sacfile = 'test.sac'
 
-#######
+############################################################################
 
 # Get response file - downloads data from IRIS and saves to respfile:
 wf.download_response(network,station,location,channel,starttime,endtime,respfile)
@@ -33,7 +38,7 @@ wf.download_response(network,station,location,channel,starttime,endtime,respfile
 
 # Correct file - loads in uncorrected sac file, corrects w/ prefilter data,
 #     and removes instrument response - saves corrected to icorr_sacfile:
-wf.remove_response(sacfile,respfile,icorr_sacfile,prefilt)
+wf.remove_response(sacfile,respfile,icorr_sacfile,prefilt,tsunit)
 
 
 
