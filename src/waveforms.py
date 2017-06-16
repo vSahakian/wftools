@@ -1,5 +1,58 @@
 ## Function 
 
+#############################################################################
+def cut_waveform2event(uncut_file_path,cut_file_path,cut_starttime,cut_endtime,evlon,evlat,evdepth,evid,evorigin,evmag):
+    '''
+    Cut a waveform into an event file
+    Input:
+        uncut_file_path:            String with path to the uncut file (mseed or sac)
+        cut_file_path:              String with path to the cut file (mseed or sac)
+        cut_starttime:              UTCDateTime of start time for file
+        cut_endtime:                UTCDateTime of end time for file
+        evlon:                      Event longitude
+        evlat:                      Event latitude
+        evdepth:                    Event depth
+        evid:                       Event id, float, no network code
+        evorigin:                   UTCDateTime of event origin
+        evmag:                      Event magnitude
+    Output:
+        Writes cut sac file to cut_file_path             
+    '''
+    
+    from obspy import read
+    
+    # Read in mseed data:
+    mseedst = read(uncut_file_path)
+    print uncut_file_path
+    
+    # Cut the data, for all traces in the stream:
+    mseedst.slice(starttime=cut_starttime,endtime=cut_endtime)
+    print cut_starttime
+    print cut_endtime
+    print mseedst
+    
+    # Write to the output file, in sac...
+    mseedst.write(cut_file_path,format='SAC')
+    
+    # Reread it in, as sac, to add the header info:
+    sacst = read(cut_file_path)
+    
+    # Write sac header:
+    for tracei in range(len(sacst)):
+        sacst[tracei].stats['sac']['evlo'] = evlon
+        sacst[tracei].stats['sac']['evla'] = evlat
+        sacst[tracei].stats['sac']['evdp'] = evdepth
+        sacst[tracei].stats['sac']['nevid'] = evid
+        sacst[tracei].stats['sac']['o'] = evorigin
+        sacst[tracei].stats['sac']['mag'] = evmag
+        
+        print sacst[tracei].stats
+        
+    sacst.write(cut_file_path,format='SAC')
+    
+    
+    
+
 
 #############################################################################
 def download_response(network,station,location,channel,start,end,respfile):
