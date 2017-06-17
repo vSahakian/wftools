@@ -6,12 +6,19 @@
 import waveforms as wf
 import numpy as np
 from obspy.core import UTCDateTime
+from glob import glob
 
 # Path to the event box catalog file:
 catalogfile = '/Users/vsahakian/iris/play_data/catalog/Imperial_Valley.txt'
 
 # Main anzanas directory:
 anzanas_dir = '/net/anzanas/data/ANZA_waveforms/'
+
+# Acceptable channels:
+accept_channel = '*H[H,N][N,Z,E]*'
+
+# Cut event file directory:
+cut_dir = '/Users/vsahakian/iris/play_data/catalog/Imperial_Valley/'
 
 #############################################################################
 # Read in catalog file - in floats, and strings:
@@ -49,4 +56,16 @@ for eventi in range(len(evid)):
     evjulday_i = evorigin.julday
     
     ## Now, cut every file.
+    # Directory - 
+    event_dir = anzanas_dir + evyear_i + '/' + evjulday_i + '/'
+    
+    # Glob all files here:
+    globlist = glob(event_dir + '*H[H,N][N,Z,E]*')
+    
+    ## For each file in this list, cut the file and store to the new directory.
+    # New event directory:
+    event_dir_new = cut_dir + 'Event_' + evid + '/'
+    
+    for sta_chan in range(len(globlist)):
+        
     
