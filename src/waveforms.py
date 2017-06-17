@@ -23,13 +23,9 @@ def cut_waveform2event(uncut_file_path,cut_file_path,cut_starttime,cut_endtime,e
     
     # Read in mseed data:
     mseedst = read(uncut_file_path)
-    print uncut_file_path
     
     # Cut the data, for all traces in the stream:
-    mseedst.slice(starttime=cut_starttime,endtime=cut_endtime)
-    print cut_starttime
-    print cut_endtime
-    print mseedst
+    mseedst.trim(starttime=cut_starttime,endtime=cut_endtime)
     
     # Write to the output file, in sac...
     mseedst.write(cut_file_path,format='SAC')
@@ -46,14 +42,11 @@ def cut_waveform2event(uncut_file_path,cut_file_path,cut_starttime,cut_endtime,e
         sacst[tracei].stats['sac']['o'] = evorigin
         sacst[tracei].stats['sac']['mag'] = evmag
         
-        print sacst[tracei].stats
-        
+    #         
     sacst.write(cut_file_path,format='SAC')
     
     
     
-
-
 #############################################################################
 def download_response(network,station,location,channel,start,end,respfile):
     '''
